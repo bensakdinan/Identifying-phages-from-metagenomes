@@ -198,3 +198,5 @@ k141_105171|provirus_22169_37874,GB_GCA_025758045.1,d__Bacteria;p__Bacillota;c__
 
 ## Further directions
 There are many analyses to run, I recommend also clustering these phages into vOTUs using vcontact2 (https://bitbucket.org/MAVERICLab/vcontact2)
+
+## Thank you for taking a look through this pipeline, good luck and happy phage-hunting!
