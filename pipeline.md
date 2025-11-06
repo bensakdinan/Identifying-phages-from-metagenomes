@@ -96,9 +96,44 @@ cat /path/to/sample_names.txt | parallel -j 10 '
   output_path=path/to/output/02_genomad/$sample
   genomad_database=/path/to/genomad_db_v
 
-  genomad end-to-end --cleanup --splits 8 "$metagenome_file" "$output_path" "$genomad_database"
+  genomad end-to-end --cleanup --splits 8 "$metagenome_file" "$output_path" "$genomad_database" && echo 'done' > $output_path/${sample}.genomad.done
 '
 ```
 
 ## Assess quality and completeness of viral contigs
-Now that we have identified our viral contigs, we can assess their quality and completeness to filter out ones with low scores. 
+Now that we have identified our viral contigs, we can assess their quality and completeness to filter out ones with low scores. First step though, is to decide what phages we want to work with. If you only want to look at extracellular phages, those will be found in `/path/to/genomad_output/$sample/final.contigs_summary/viruses.fna`. If you also want to look at prophages, those are found in `/path/to/genomad_output/$sample/final.contigs_find_proviruses/$sample/final.contigs_provirus.fna`. If you only want to look at specific taxa of phages, you can filter by taxonomy using this .tsv file `/path/to/genomad_output/$sample/final.contigs_summary/final.contigs_virus_summary.tsv`. 
+
+If you want to combine both extracellular phages and prophages, you can concatenate both .fna files like so: 
+```bash
+cat /path/to/genomad_output/$sample/final.contigs_summary/viruses.fna /path/to/genomad_output/$sample/final.contigs_find_proviruses/$sample/final.contigs_provirus.fna > /path/to/genomad_output/$sample/all_phages.fna 
+```
+
+Now that you have decided which phages you want to work with (I'll be using all phages for the rest of this tutorial), we have to assess the quality and completeness of their genomes. To do so, we will use CheckV.
+`end_to_end` to execute the entire checkV pipeline
+`-t 16` 16 threads for computational efficiency, adjusted as needed
+
+```bash
+#!/bin/bash
+conda activate checkv_env
+
+cat /path/to/sample_names.txt | parallel -j 10 '
+  sample={}
+
+  input_phages=/path/to/genomad_output/$sample/all_phages.fna
+  output_path=/path/to/output/03_checkv/$sample
+  export CHECKVDB=/path/to/checkv-db-v1.5   # CheckV requires database directory to be exported
+
+  checkv end_to_end $input_phages $output_path -t 16 && echo 'done' > $output_path/${sample}.checkv.done
+'
+```
+
+Now we have calculated the quality and completeness of all of our viral contigs. These stats can be found in the output file `quality_summary.tsv`. Here is an example output:
+```
+contig_id	contig_length	provirus	proviral_length	gene_count	viral_genes	host_genes	checkv_quality	miuvig_quality	completeness	completeness_method	contamination	kmer_freq	warnings
+k141_93512|provirus_21938_25795	3858	No	NA	8	0	0	Low-quality	Genome-fragment	6.39	AAI-based (high-confidence)	0.0	1.0	no viral genes detected
+k141_97103|provirus_92502_148357	55856	No	NA	68	9	6	Medium-quality	Genome-fragment	70.32	HMM-based (lower-bound)	0.0	1.0	
+k141_111526|provirus_760_49311	48552	Yes	7888	46	3	20	Low-quality	Genome-fragment	16.04	HMM-based (lower-bound)	83.75	1.0	
+k141_43345|provirus_76_8714	8639	Yes	3516	11	2	4	Low-quality	Genome-fragment	9.61	AAI-based (high-confidence)	59.3	1.0	
+k141_64932|provirus_1_13101	13101	No	NA	20	5	0	Low-quality	Genome-fragment	16.25	HMM-based (lower-bound)	0.0	1.0	
+```
+
