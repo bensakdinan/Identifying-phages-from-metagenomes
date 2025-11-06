@@ -208,4 +208,4 @@ There are many analyses to run, I recommend also clustering these phages into vO
 - Nayfach, S., Camargo, A.P., Schulz, F. et al. CheckV assesses the quality and completeness of metagenome-assembled viral genomes. Nat Biotechnol 39, 578–585 (2021). https://doi.org/10.1038/s41587-020-00774-7
 - Camargo, A. P., Roux, S., Schulz, F., Babinski, M., Xu, Y., Hu, B., Chain, P. S. G., Nayfach, S., & Kyrpides, N. C. — Nature Biotechnology (2023), DOI: 10.1038/s41587-023-01953-y.
 - Bin Jang, H., Bolduc, B., Zablocki, O., Kuhn, J. H., Roux, S., Adriaenssens, E. M., … Sullivan, M. B. (2019). Taxonomic assignment of uncultivated prokaryotic virus genomes is enabled by gene-sharing networks. Nature Biotechnology. https://doi.org/10.1038/s41587-019-0100-8
-- Sakdinan, Ben. Unpublished. Evidence of prophage induction in the human gut microbiome following ciprofloxacin exposure.
+- Sakdinan, Ben. Unpublished. "Evidence of prophage induction in the human gut microbiome following ciprofloxacin exposure".
