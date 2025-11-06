@@ -1,6 +1,7 @@
 # Identifying-phages-from-metagenomes
 
 **"What about the phages?"** is a question I often see raised by microbiologists during the question period following a seminar. It's easy to neglect the phage fraction in a given biological sample, and it's all too common to forget about these microbial parasites. Phages are uniquely difficult to study due to their lack of a single marker gene. This greatly complicates sequencing since there is no universal PCR target, nor is there an easy genetic identification for phages. The result is that phages are often ignored or forgotten about. 
+
 **I don't want phages to be ignored.**
 
 To overcome this obstacle, metagenomic sequencing is used to capture phage DNA from samples. A metagenome is the collective genetic material of any any all organisms within a given sample (bacteria, viruses, fungi, eukaryotes, etc). Put simply, by sequencing *everything* you *will* capture phage DNA. Metagenomic sequencing generates immense volumes of data which certainly provides immense potential, but this high-throughput output also significantly complicates analysis. I beilieve this to be a major barrier of entry to metagenomics.
