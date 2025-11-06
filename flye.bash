@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# nohup ./flye.bash > flye_log_01.out &
+# nohup ./flye.bash > flye.01.out &
 
 source /mfs/bens/miniconda3/etc/profile.d/conda.sh
 conda activate flye_env
