@@ -130,10 +130,71 @@ cat /path/to/sample_names.txt | parallel -j 10 '
 Now we have calculated the quality and completeness of all of our viral contigs. These stats can be found in the output file `quality_summary.tsv`. Here is an example output:
 ```
 contig_id	contig_length	provirus	proviral_length	gene_count	viral_genes	host_genes	checkv_quality	miuvig_quality	completeness	completeness_method	contamination	kmer_freq	warnings
-k141_93512|provirus_21938_25795	3858	No	NA	8	0	0	Low-quality	Genome-fragment	6.39	AAI-based (high-confidence)	0.0	1.0	no viral genes detected
+k141_71124|provirus_4909_72203  67295   No      NA      94      25      3       High-quality    High-quality    100.0   AAI-based (high-confidence)     0.0     1.0 
 k141_97103|provirus_92502_148357	55856	No	NA	68	9	6	Medium-quality	Genome-fragment	70.32	HMM-based (lower-bound)	0.0	1.0	
 k141_111526|provirus_760_49311	48552	Yes	7888	46	3	20	Low-quality	Genome-fragment	16.04	HMM-based (lower-bound)	83.75	1.0	
-k141_43345|provirus_76_8714	8639	Yes	3516	11	2	4	Low-quality	Genome-fragment	9.61	AAI-based (high-confidence)	59.3	1.0	
-k141_64932|provirus_1_13101	13101	No	NA	20	5	0	Low-quality	Genome-fragment	16.25	HMM-based (lower-bound)	0.0	1.0	
+k141_1791|provirus_1_9293       9293    No      NA      13      0       1       Not-determined  Genome-fragment NA      NA      0.0     1.0     no viral genes detected
+
 ```
 
+We can filter out phage contigs that are`"Not-determined` or `Low-quality`. The script below :
+```bash
+#!/bin/bash
+conda activate seqkit_env
+
+for input_file in /path/to/03_checkv/*/quality_summary.tsv; do
+    # Gets sample name from the directory name
+    sample=$(basename "$(dirname "$input_file")")
+
+    # This is the concatenated fasta of all our phages 
+    phage_fasta=/path/to/genomad_output/${sample}/all_phages.fna
+    filtered_phage_names=/path/to/03_checkv/${sample}/${sample}_phages_filtered.txt
+    filtered_phages=/path/to/03_checkv/${sample}/${sample}_filtered_phages.fna
+
+    # First check that the input quality_summary.tsv file exists
+    if [[ -f "$input_file" ]]; then
+        echo "Filtering out phages for: $sample"
+
+        # Filter out contigs that have Not-determined or Low-quality checkv-quality
+        awk -F '\t' 'NR>1 && $8!="Not-determined" && $8!="Low-quality" {print $1}' \
+            "$input_file" > "$filtered_phage_names"
+
+        # Now filter all_phages.fna using the list of passed phage contigs
+        seqkit grep -f "$filtered_phage_names" "$phage_fasta" > "$filtered_phages"
+    else
+        echo "quality_summary.tsv not found for sample $sample"
+    fi
+done
+```
+After this step is complete, we now have successfully generated a multifasta (.fna) file containing all of our phage contigs `/path/to/genomad_output/${sample}/${sample}_filtered_phages.fna`. From here you can do more analyses, this is completely dependent on your project now! One useful thing to do next is estimate the bacterial hosts for each of the phages you have now identified. 
+
+## Estimate phage hosts
+For this we will use iPHoP
+
+```bash
+#!/bin/bash
+conda activate iphop_env
+
+cat /mfs/bens/aim2/yaffe_data/day1_srs_ids.txt | parallel -j 10 '
+  sample={}
+
+  prophages=/path/to/03_checkv/${sample}/${sample}_filtered_phages.fna
+  iphop_database=/path/to/iphop/database
+  output_dir=/path/to/output/04_iphop/$sample
+  
+  iphop predict --fa_file "$prophages" --db_dir "$iphop_database" --out_dir "$output_dir"  && echo 'done' > /path/to/04_iphop/${sample}.iphop.done
+'
+```
+
+The main output from iPHoP will be `Host_prediction_to_genome_m90.csv`, which looks like this:
+```
+Virus,Host genome,Host taxonomy,Main method,Confidence score,Additional methods
+k141_100819|provirus_20279_27577,RS_GCF_025150245.1,d__Bacteria;p__Bacillota;c__Clostridia;o__Lachnospirales;f__Lachnospiraceae;g__Dorea;s__Dorea formicigenerans,blast,91.20,iPHoP-RF;85.40
+k141_100819|provirus_20279_27577,RS_GCF_025149785.1,d__Bacteria;p__Bacillota;c__Clostridia;o__Lachnospirales;f__Lachnospiraceae;g__Bariatricus;s__Bariatricus comes,blast,90.30,iPHoP-RF;75.20
+k141_100819|provirus_20279_27577,RS_GCF_014287705.1,d__Bacteria;p__Bacillota;c__Clostridia;o__Lachnospirales;f__Lachnospiraceae;g__Dorea_D;s__Dorea_D hominis,blast,90.20,iPHoP-RF;80.80
+k141_105171|provirus_22169_37874,GB_GCA_963588145.1,d__Bacteria;p__Bacillota;c__Clostridia;o__Oscillospirales;f__Ruminococcaceae;g__Gemmiger;s__Gemmiger sp963588145,blast,95.00,iPHoP-RF;94.10
+k141_105171|provirus_22169_37874,GB_GCA_025758045.1,d__Bacteria;p__Bacillota;c__Clostridia;o__Oscillospirales;f__Ruminococcaceae;g__Gemmiger;s__Gemmiger sp900539695,iPHoP-RF,94.10,blast;92.20
+```
+
+## Further directions
+There are many analyses to run, I recommend also clustering these phages into vOTUs using vcontact2 (https://bitbucket.org/MAVERICLab/vcontact2)
