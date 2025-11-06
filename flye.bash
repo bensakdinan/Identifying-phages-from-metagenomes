@@ -2,7 +2,7 @@
 
 # nohup ./flye.bash > flye.01.out &
 
-source /mfs/bens/miniconda3/etc/profile.d/conda.sh
+source /path/to/user/miniconda3/etc/profile.d/conda.sh
 conda activate flye_env
 
 cat /path/to/sample_names.txt | parallel -j 10 '
