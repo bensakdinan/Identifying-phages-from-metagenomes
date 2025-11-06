@@ -200,3 +200,12 @@ k141_105171|provirus_22169_37874,GB_GCA_025758045.1,d__Bacteria;p__Bacillota;c__
 There are many analyses to run, I recommend also clustering these phages into vOTUs using vcontact2 (https://bitbucket.org/MAVERICLab/vcontact2)
 
 ## Thank you for taking a look through this pipeline, good luck and happy phage-hunting!
+
+## References
+- Shen, Wei, Botond Sipos, and Liuyang Zhao. 2024. “ SeqKit2: A Swiss Army Knife for Sequence and Alignment Processing.” iMeta 3, e191. https://doi.org/10.1002/imt2.191
+- Wouter De Coster, Rosa Rademakers, NanoPack2: population-scale evaluation of long-read sequencing data, Bioinformatics, Volume 39, Issue 5, May 2023, btad311, https://doi.org/10.1093/bioinformatics/btad311
+- Mikhail Kolmogorov, Derek M. Bickhart, Bahar Behsaz, Alexey Gurevich, Mikhail Rayko, Sung Bong Shin, Kristen Kuhn, Jeffrey Yuan, Evgeny Polevikov, Timothy P. L. Smith and Pavel A. Pevzner "metaFlye: scalable long-read metagenome assembly using repeat graphs", Nature Methods, 2020 doi:10.1038/s41592-020-00971-x
+- Nayfach, S., Camargo, A.P., Schulz, F. et al. CheckV assesses the quality and completeness of metagenome-assembled viral genomes. Nat Biotechnol 39, 578–585 (2021). https://doi.org/10.1038/s41587-020-00774-7
+- Camargo, A. P., Roux, S., Schulz, F., Babinski, M., Xu, Y., Hu, B., Chain, P. S. G., Nayfach, S., & Kyrpides, N. C. — Nature Biotechnology (2023), DOI: 10.1038/s41587-023-01953-y.
+- Bin Jang, H., Bolduc, B., Zablocki, O., Kuhn, J. H., Roux, S., Adriaenssens, E. M., … Sullivan, M. B. (2019). Taxonomic assignment of uncultivated prokaryotic virus genomes is enabled by gene-sharing networks. Nature Biotechnology. https://doi.org/10.1038/s41587-019-0100-8
+- Sakdinan, Ben. Unpublished. Evidence of prophage induction in the human gut microbiome following ciprofloxacin exposure.
