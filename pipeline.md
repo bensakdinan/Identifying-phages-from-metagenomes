@@ -11,6 +11,8 @@ You will need the following software (downloading within conda environments is r
 
 `conda activate [environment_name]` is used throughout this pipeline to load software
 
+If you are working on a cluster that does not support `conda` (ie. SLURM job submission), your scripts will look a little different. To parallelize jobs, you would likely not be using GNU parallel as I am using here.
+
 ## Trimming and cleaning reads 
 The first step is to clean our reads with **chopper**. This involves removing sequencing adapters, filtering out low-score and short reads.
 `--trim-approach trim-by-quality` trims low quality bases from ends of reads using quality score `cutoff` of 20. You should consult Q-score distribution of your sequencing run to ensure not too much data is lost, but Q20 should be good. 
