@@ -7,7 +7,8 @@ To overcome this obstacle, metagenomic sequencing is used to capture phage DNA f
 
 Metagenomics can be daunting for microbiologists to start exploring, especially for those with little to no experience in bioinformatics. The immense volume of data in metagenomics can be intimidating and I often hear from fellow microbiologists that they don't exactly know where to begin. However, identifying phages from metagenomes does not need to be complicated. Here I want to provide a basic pipeline for extracting phage genomes from metagenomic read datasets. 
 
-## Before we start
+## Info before we start
 - I am working under the assumption that you have basic skills for navigating in command line.
 - I am also using Oxford Nanopore long reads in this pipeline. The majority of this pipeline (with the exception for metagenome assembly, where you would need to use a short read assembler such as MEGAHIT) can be applied to short read datasets, but commands would need to be adjusted to handle paired end short reads.
-- I am also working under the assumption that your reads have already been trimmed (if using Oxford Nanopore, their basecaller, Dorado, automatically trims adapter sequences) 
+- I am also working under the assumption that your reads have already been trimmed (if using Oxford Nanopore, their basecaller, Dorado, automatically trims adapter sequences)
+- This pipeline can also be applied to identify prophage sequences and plasmids. Although some downstream analysis does not apply for plasmids (ie. phage-host prediction)
