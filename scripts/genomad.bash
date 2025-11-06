@@ -12,5 +12,5 @@ cat /path/to/sample_names.txt | parallel -j 10 '
   output_path=path/to/output/02_genomad/$sample
   genomad_database=/path/to/genomad_db_v
 
-  genomad end-to-end --cleanup --splits 8 "$metagenome_file" "$output_path" "$genomad_database"
+  genomad end-to-end --cleanup --splits 8 "$metagenome_file" "$output_path" "$genomad_database" && echo 'done' > $output_path/${sample}.genomad.done
 '
