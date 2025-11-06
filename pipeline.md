@@ -73,7 +73,7 @@ cat /path/to/sample_names.txt | parallel -j 10 '
 
   # Directories
   metagenome_file=/path/to/01_flye/$sample/${sample}_cleaned.fastq.gz
-  output_path=/path/to/01_flye/$sample/ # We will store our filtered contigs in the same directory, but under a new name
+  output_path=/path/to/01_flye/$sample # We will store our filtered contigs in the same directory, but under a new name
 
   seqkit seq -m 1500 $metagenome_file > ${output_path}/${sample}_filtered_1.5kb.fna
 '
@@ -81,9 +81,23 @@ cat /path/to/sample_names.txt | parallel -j 10 '
 
 ## Identify viral contigs
 Using our assembled and 1.5kb filtered metagenome, we can use **geNomad** to identify mobile genetic elements. This includes, plasmids, viruses + phages, and prophages. 
+`end-to-end` will run the entire geNomad pipeline
+`--splits 8` split resources 
+`--cleanup` delete intermediate files
 
 ```bash
 #!/bin/bash
+conda activate genomad_env
+
+cat /path/to/sample_names.txt | parallel -j 10 '
+  sample={}
+
+  metagenome_file=/path/to/01_flye/$sample/${sample}_cleaned.fastq.gz
+  output_path=path/to/output/02_genomad/$sample
+  genomad_database=/path/to/genomad_db_v
+
+  genomad end-to-end --cleanup --splits 8 "$metagenome_file" "$output_path" "$genomad_database"
+'
 ```
 
 ## Assess quality and completeness of viral contigs
