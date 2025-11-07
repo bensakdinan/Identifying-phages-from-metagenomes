@@ -124,6 +124,7 @@ cat /path/to/sample_names.txt | parallel -j 10 '
   export CHECKVDB=/path/to/checkv-db-v1.5   # CheckV requires database directory to be exported
 
   checkv end_to_end $input_phages $output_path -t 16 && echo 'done' > $output_path/${sample}.checkv.done
+  # You can also add `-d [database_path]` in the command if the export statement does not work
 '
 ```
 
