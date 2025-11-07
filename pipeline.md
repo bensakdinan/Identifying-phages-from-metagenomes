@@ -37,7 +37,7 @@ cat /path/to/sample_names.txt | parallel -j 10 '
 '
 ```
 
-## Metagenomne assembly
+## Metagenome assembly
 Now that we have cleaned and trimmed fastq.gz reads, we can assemble our metagenome using **Flye**. 
 `--meta` flag for metagenome assembly
 `--nano-hq` as our input since we previously cleaned reads with minmum Q20
