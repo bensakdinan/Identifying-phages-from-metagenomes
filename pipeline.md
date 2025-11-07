@@ -9,7 +9,7 @@ You will need the following software (downloading within conda environments is r
 - **CheckV** for assessing viral contig completeness and contiguity (https://bitbucket.org/berkeleylab/checkv/src/master/#markdown-header-running-checkv)
 - **iPHoP** for estimating phage-host pairings (https://bitbucket.org/srouxjgi/iphop/src)
 
-`conda activate [environment_name]` is used throughout this pipeline to load software. Additionally, you will need to run run these commands in the background as they can take multiple hours/days. Running these scripts directly in the shell will most likely result in them getting killed as soon as your computer goes to sleep. You can do this using `nohup ./script.bash > script.01.out &`. This will run your script in the background and will direct all standard out to a log file named "script.01.out".
+`conda activate [environment_name]` is used throughout this pipeline to load software. Additionally, you will need to run these commands in the background as they can take multiple hours/days. Running these scripts directly in the shell will most likely result in them getting killed as soon as your computer goes to sleep. You can do this using `nohup ./script.bash > script.01.out &`. This will run your script in the background and will direct all standard out to a log file named "script.01.out".
 
 NOTICE: If you are working on a cluster that does not support `conda` (ie. SLURM job submission), your scripts will look a little different. To parallelize jobs, you would likely not be using GNU parallel as I am using here.
 
