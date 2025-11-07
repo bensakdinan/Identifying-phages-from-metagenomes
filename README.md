@@ -4,7 +4,7 @@
 
 **I don't want phages to be ignored.** 
 
-To overcome this obstacle, metagenomic sequencing is used to capture phage DNA from samples. A metagenome is the collective genetic material of any any all organisms within a given sample (bacteria, viruses, fungi, eukaryotes, etc). Put simply, by sequencing *everything* you *will* capture phage DNA. Metagenomic sequencing generates immense volumes of data which certainly provides immense potential, but this high-throughput output also significantly complicates analysis. I beilieve this to be a major barrier of entry to metagenomics.
+To overcome this obstacle, metagenomic sequencing is used to capture phage DNA from samples. A metagenome is the collective genetic material of any and all organisms within a given sample (bacteria, viruses, fungi, eukaryotes, etc). Put simply, by sequencing *everything* you *will* capture phage DNA. Metagenomic sequencing generates immense volumes of data which certainly provides immense potential, but this high-throughput output also significantly complicates analysis. I beilieve this to be a major barrier of entry to metagenomics.
 
 Metagenomics can be daunting for microbiologists to start exploring, especially for those with little to no experience in bioinformatics. The immense volume of data in metagenomics can be intimidating and I often hear from fellow microbiologists that they don't exactly know where to begin. 
 
