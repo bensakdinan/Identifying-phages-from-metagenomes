@@ -8,7 +8,7 @@ To overcome this obstacle, metagenomic sequencing is used to capture phage DNA f
 
 Metagenomics can be daunting for microbiologists to start exploring, especially for those with little to no experience in bioinformatics. The immense volume of data in metagenomics can be intimidating and I often hear from fellow microbiologists that they don't exactly know where to begin. 
 
-However, identifying phages from metagenomes does not need to be complicated. Here I want to provide **[this basic pipeline](https://github.com/bensakdinan/Identifying-phages-from-metagenomes/blob/57223ad5c71596f36c5ff666f38b2118843c35de/pipeline.md)** for extracting quality-controlled phage genomes from metagenomic read datasets. It includes commented out code, brief theoretical explanations of each step, and definitions for various command line options. There are certainly steps that can be taken to further optimize this pipeline and it is not perfect, but I aim here to present a basic foundation. 
+However, identifying phages from metagenomes does not need to be complicated. Here I want to provide **[this basic pipeline](https://github.com/bensakdinan/Identifying-phages-from-metagenomes/blob/57223ad5c71596f36c5ff666f38b2118843c35de/pipeline.md)** for extracting quality-controlled phage genomes from metagenomic read datasets. This pipeline uses current benchmarked tools for phage identification. It includes commented out code, brief theoretical explanations of each step, and definitions for various command line options. There are certainly steps that can be taken to further optimize this pipeline and it is not perfect, but I aim here to present a basic foundation. 
 
 I hope this helps make phage discovery more accessible for microbiologists getting started in bioinformatics!
 
