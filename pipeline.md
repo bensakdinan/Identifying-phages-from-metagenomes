@@ -9,13 +9,15 @@ You will need the following software (downloading within conda environments is r
 - **CheckV** for assessing viral contig completeness and contiguity (https://bitbucket.org/berkeleylab/checkv/src/master/#markdown-header-running-checkv)
 - **iPHoP** for estimating phage-host pairings (https://bitbucket.org/srouxjgi/iphop/src)
 
-`conda activate [environment_name]` is used throughout this pipeline to load software. Additionally, you will need to run these commands in the background as they can take multiple hours/days. Running these scripts directly in the shell will most likely result in them getting killed as soon as your computer goes to sleep. You can do this using `nohup ./script.bash > script.01.out &`. This will run your script in the background and will direct all standard out to a log file named "script.01.out".
+Conda is used throughout this pipeline to manage software and packages. Visit the links pasted above for download instruction for each tool. `conda activate [environment_name]` is used at the top of each script to activate the conda environments for each tool. 
 
-NOTICE: If you are working on a cluster that does not support `conda` (ie. SLURM job submission), your scripts will look a little different. To parallelize jobs, you would likely not be using GNU parallel as I am using here.
+Additionally, you will need to run these commands in the background as they can take multiple hours/days. Running these scripts directly in the shell will most likely result in them getting killed as soon as your computer goes to sleep. You can do this using `nohup ./script.bash > script.01.out &`. This will run your script in the background and will direct all standard out to a log file named "script.01.out". See [scripts](https://github.com/bensakdinan/Discovering-phages-from-metagenomes/tree/b6ab6b8b9b18fe3db6c5176e9afa8fd9afe10ba9/scripts) for `nohup` commands to run each file.
+
+**NOTICE**: If you are working on a cluster that does not support `conda` (ie. SLURM job submission), your scripts will look a little different. To parallelize jobs, you would likely not be using GNU parallel as I am using here.
 
 ## Trimming and cleaning reads 
 The first step is to clean our reads with **chopper**. This involves removing sequencing adapters, filtering out low-score and short reads.
-`--trim-approach trim-by-quality` trims low quality bases from ends of reads using quality score `cutoff` of 20. You should consult Q-score distribution of your sequencing run to ensure not too much data is lost, but Q20 should be good. 
+`--trim-approach trim-by-quality` trims low quality bases from ends of reads using quality score `cutoff` of 20. You should consult the Q-score distribution of your sequencing run to ensure not too much data is lost, but Q20 is a good standard. 
 `--minlength 500` filter out reads less than 500bp
 Adapter sequences are likely already removed during basecalling with Dorado, but if not, consult `--headcrop <HEADCROP>`
 
@@ -38,7 +40,8 @@ cat /path/to/sample_names.txt | parallel -j 10 '
 ```
 
 ## Metagenome assembly
-Now that we have cleaned and trimmed fastq.gz reads, we can assemble our metagenome using **Flye**. 
+Now that we have cleaned and trimmed fastq.gz reads, we can assemble our metagenome using **Flye**. There are two main methods for metagenome assembly: reference based, and *de novo*. Reference based approaches are more straightforward, it involves mapping reads to known genomes. Consdering that vast majority of phages do not have reference genomes, we instead take a *de novo* approach. **Flye** accomplishes this by  overlapping reads to construct what is known as an **assembly graph**. 
+
 `--meta` flag for metagenome assembly
 `--nano-hq` as our input since we previously cleaned reads with minmum Q20
 `-t 8` 8 threads, but adjust accordingly
@@ -80,7 +83,8 @@ cat /path/to/sample_names.txt | parallel -j 10 '
 ```
 
 ## Identify viral contigs
-Using our assembled and 1.5kb filtered metagenome, we can use **geNomad** to identify mobile genetic elements. This includes, plasmids, viruses + phages, and prophages. 
+Using our assembled and 1.5kb filtered metagenome, we can use **geNomad** to identify mobile genetic elements. This includes, plasmids, viruses + phages, and prophages. GeNomad functions by using a database of over 200,000 viral proteins to annotate and taxonomically classify contigs. Additionally, it can identfy prophages by identifying flanking bacterial DNA and common prophage genes (ie. Integrase). 
+
 `end-to-end` will run the entire geNomad pipeline
 `--splits 8` split resources 
 `--cleanup` delete intermediate files
@@ -103,12 +107,13 @@ cat /path/to/sample_names.txt | parallel -j 10 '
 ## Assess quality and completeness of viral contigs
 Now that we have identified our viral contigs, we can assess their quality and completeness to filter out ones with low scores. First step though, is to decide what phages we want to work with. If you only want to look at extracellular phages, those will be found in `/path/to/genomad_output/$sample/final.contigs_summary/viruses.fna`. If you also want to look at prophages, those are found in `/path/to/genomad_output/$sample/final.contigs_find_proviruses/$sample/final.contigs_provirus.fna`. If you only want to look at specific taxa of phages, you can filter by taxonomy using this .tsv file `/path/to/genomad_output/$sample/final.contigs_summary/final.contigs_virus_summary.tsv`. 
 
-If you want to combine both extracellular phages and prophages, you can concatenate both .fna files like so: 
+If you want to combine both extracellular phages and prophages, you can concatenate both .fna files like so (iterate for all samples if you have many samples): 
 ```bash
 cat /path/to/genomad_output/$sample/final.contigs_summary/viruses.fna /path/to/genomad_output/$sample/final.contigs_find_proviruses/$sample/final.contigs_provirus.fna > /path/to/genomad_output/$sample/all_phages.fna 
 ```
 
-Now that you have decided which phages you want to work with (I'll be using all phages for the rest of this tutorial), we have to assess the quality and completeness of their genomes. To do so, we will use CheckV.
+Now that you have decided which phages you want to work with (I'll be using all phages for the rest of this tutorial), we have to assess the quality and completeness of their genomes. To do so, we will use CheckV. CheckV also functions by comparing the contiguity and completeness of putative viral genomes to a database of fully assembled genomes. 
+
 `end_to_end` to execute the entire checkV pipeline
 `-t 16` 16 threads for computational efficiency, adjusted as needed
 
@@ -170,7 +175,11 @@ done
 After this step is complete, we now have successfully generated a multifasta (.fna) file containing all of our phage contigs `/path/to/genomad_output/${sample}/${sample}_filtered_phages.fna`. From here you can do more analyses, this is completely dependent on your project now! One useful thing to do next is estimate the bacterial hosts for each of the phages you have now identified. 
 
 ## Estimate phage hosts
-For this we will use iPHoP
+For this we will use iPHoP. This tool works by running 6 different host prediction methods:
+- Host-based alignment methods: BLAST, CRISPR, SpacePharer
+- Host-based alignment-independent: Propkaryote Host Predictor (PHP), VirHostMatcher
+- Host-independent: Random Forest Assignment of Hosts (RaFAH)
+iPHoP then aggregates the results of these 6 methods to compute a weighted score for each phage host, then declaring the most confident prediction.
 
 ```bash
 #!/bin/bash
