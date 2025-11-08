@@ -18,11 +18,11 @@ for input_file in /path/to/03_checkv/*/quality_summary.tsv; do
     if [[ -f "$input_file" ]]; then
         echo "Filtering out phages for: $sample"
 
-        # Filter out contigs that have Not-determined or Low-quality checkv-quality
+        # Create a .txt file with all the names of phage contigs, excluding those with Not-determined of Low-quality 
         awk -F '\t' 'NR>1 && $8!="Not-determined" && $8!="Low-quality" {print $1}' \
             "$input_file" > "$filtered_phage_names"
 
-        # Now filter all_phages.fna using the list of passed phage contigs
+        # Now filter all_phages.fna using the list of passed phage contig names
         seqkit grep -f "$filtered_phage_names" "$phage_fasta" > "$filtered_phages"
     else
         echo "quality_summary.tsv not found for sample $sample"
