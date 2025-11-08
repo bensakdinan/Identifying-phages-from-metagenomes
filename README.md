@@ -12,7 +12,8 @@ However, identifying phages from metagenomes does not need to be complicated. He
 
 ## Info before we start
 - I am working under the assumption that you have basic skills for navigating in command line.
-- I am also using Oxford Nanopore long reads in this pipeline. Read QC/trimming and metagenome assembly will use different tools if you are using short reads (ie. FastP for QC and MEGAHIT/MetaSPAdes for assembly). The remainder of this pipeline will still work with short read datasets. 
+- I am also using Oxford Nanopore long reads in this pipeline. Long reads help assemble higher quality genomes.
+    - Read QC/trimming and metagenome assembly will use different tools if you are using short reads (ie. FastP for QC and MEGAHIT/MetaSPAdes for assembly). The remainder of this pipeline will still work with short read datasets. 
 - I am also working under the assumption that your reads have already been trimmed (if using Oxford Nanopore, their basecaller, Dorado, automatically trims adapter sequences)
 - This pipeline can also be applied to identify prophage sequences and plasmids. Although some downstream analysis does not apply for plasmids (ie. phage-host prediction)
 
